@@ -17,6 +17,17 @@ app.get("/", (req, res) => {
   });
 });
 
+
+app.get("/files/:filename",(req,res)=>{
+    fs.readFile(`./files/${req.params.filename}`,"utf-8",(err,data)=>{
+        if(err){
+            console.log(err);
+            return res.status(500).send("Error reading file");
+        }
+        res.render('show',{title:req.params.filename,content:data});
+    })
+})
+
 app.post("/create",(req,res)=>{
     console.log(req.body);
 
