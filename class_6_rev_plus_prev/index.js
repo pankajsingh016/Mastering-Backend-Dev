@@ -17,28 +17,45 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/files/:filename", (req, res) => {
+  fs.readFile(`./files/${req.params.filename}`, "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error reading file");
+    }
+    res.render("show", { title: req.params.filename, content: data });
+  });
+});
 
-app.get("/files/:filename",(req,res)=>{
-    fs.readFile(`./files/${req.params.filename}`,"utf-8",(err,data)=>{
+app.get("/edit/:filename", (req, res) => {
+  res.render("edit",{fileName:req.params.filename});
+});
+
+app.post("/edit",(req,res)=>{
+    fs.rename(`./files/${req.body.previous}`,`./files/${req.body.new}`,(err)=>{
         if(err){
             console.log(err);
-            return res.status(500).send("Error reading file");
+            return res.status(500).send("Error renaming file");
         }
-        res.render('show',{title:req.params.filename,content:data});
-    })
-})
-
-app.post("/create",(req,res)=>{
-    console.log(req.body);
-
-    fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`,req.body.details,(err)=>{
-        if(err){
-            console.log(err);
-            return res.status(500).send("Error creating file");
-        }
-        console.log("File created successfully");
         res.redirect("/");
-    })
+    });
+});
+
+app.post("/create", (req, res) => {
+  console.log(req.body);
+
+  fs.writeFile(
+    `./files/${req.body.title.split(" ").join("")}.txt`,
+    req.body.details,
+    (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Error creating file");
+      }
+      console.log("File created successfully");
+      res.redirect("/");
+    }
+  );
 });
 
 app.listen(3000);
