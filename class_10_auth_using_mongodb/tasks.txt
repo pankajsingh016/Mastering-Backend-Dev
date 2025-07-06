@@ -1,0 +1,12 @@
+Create a user account
+  1. Mongoose
+  2. Schema
+  3. Model
+  4. Usercreate then password then hash the password
+  5. Store the jwt-token in the browser as the cookie
+
+
+  Login Part
+  1. Get the jwt-token.
+  2. Decrypt the user and get the email and then simply verify.
+
