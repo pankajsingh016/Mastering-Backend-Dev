@@ -1,0 +1,4 @@
+Study flow
+1. How to set a cookie.
+2. How to brcrypt and decrypt the cookies.
+3. JWT is what and How to get the data store in JWT out.
