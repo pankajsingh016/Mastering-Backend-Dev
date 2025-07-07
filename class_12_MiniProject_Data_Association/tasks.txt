@@ -1,0 +1,12 @@
+1. Creating basic app.
+2. User will be able to write posts.
+
+Step1:
+1. Login/logout
+2. Creating a User
+
+Step2:
+1. Post Creation
+2. Post Like
+3. Post Delete(only for Post Owner)
+

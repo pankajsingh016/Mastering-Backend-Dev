@@ -14,3 +14,5 @@ Ab hoga comeback
 | Class 8| Update Operation in MongoDB|[Class-8](https://github.com/pankajsingh016/Mastering-Backend-Dev/tree/main/class_8_mongodb_crud)|
 | Class 9| Authentication and Authorization | [Class-9](https://github.com/pankajsingh016/Mastering-Backend-Dev/tree/main/class_9_Authentication_And_Authorization)|
 | Class 10| Authentication Using MongoDB | [Class-10](https://github.com/pankajsingh016/Mastering-Backend-Dev/tree/main/class_10_auth_using_mongodb)|
+| Class 11| Data Association in mongodb and user,post collection and ref values| [Class-11](https://github.com/pankajsingh016/Mastering-Backend-Dev/tree/main/class_11_MongoDB_Associations)|
+| Class 12| Mini Project 1 for Data Association-MongoDB|[Class-12](https://github.com/pankajsingh016/Mastering-Backend-Dev/tree/main/class_12_MiniProject_Data_Association)|
