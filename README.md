@@ -4,7 +4,7 @@ Ab hoga comeback
 
 | Class Number | Topic Covered | Folder Link |
 |--------------|---------------|-------------|
-| Class 1| Array, map, find, indexof, freeze, await, fetch|[Class-1]('tree/main/class_1')|
+| Class 1| Array, map, find, indexof, freeze, await, fetch|[Class-1](tree/main/class_1)|
 | Class 2| npm, node, http, https, createserver using http|
 | Class 3| Assignment command line using commander in npm |
 | Class 4| Understanding Express, framework, library, middleware, routing, error handling|
