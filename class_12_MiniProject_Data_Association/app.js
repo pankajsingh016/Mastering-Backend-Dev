@@ -6,16 +6,21 @@ const app = express();
 const userModel = require("./models/user");
 const postModel = require("./models/post");
 
+
+
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ entended: true }));
 app.use(cookieParser());
 
+
+// entry page
 app.get("/", (req, res) => {
   res.render("index");
 });
 
 
+//To register user
 app.post("/register", async (req, res) => {
   let { email, password, username, name, age } = req.body;
   let user = await userModel.findOne({ email });
@@ -39,12 +44,16 @@ app.post("/register", async (req, res) => {
   res.cookie("token", token);
   res.send("Registered");
 });
-// res.redirect("/");
 
+
+//login page
 app.get("/login", async (req, res) => {
   res.render("login");
 });
 
+
+
+// login page - input
 app.post("/login", async (req, res) => {
   let { email, password } = req.body;
   let user = await userModel.findOne({ email });
@@ -55,27 +64,48 @@ app.post("/login", async (req, res) => {
     if (result) {
       const token = jwt.sign({ email: email, userid: user._id }, "shazam");
       res.cookie("token", token);
-      res.status(200).send("You are Logged In");
+      res.status(200).redirect("/profile");
     }
   });
 });
 
+
+// logout point
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
   res.redirect("/login");
 });
 
-app.get("/profile", Isloggedin, (req, res) => {
-  console.log(req.user);
-  res.send("Logged in using token from protected routes");
+
+// create a post route from /profile
+app.post("/post", Isloggedin, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  let {content } = req.body;
+  let post = await postModel.create({
+    user:user._id,
+    content:content,  
+  });
+  user.posts.push(post._id);
+  await user.save();
+  res.redirect('/profile');
 });
+
+
+
+// after login user sent here
+app.get("/profile", Isloggedin, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email }).populate("posts");
+  res.render("profile", { user });
+});
+
+
 
 // middleware for protected routes
 function Isloggedin(req, res, next) {
   if (req.cookies.token === "") {
     res.status(404).redirect("/login");
   } else {
-    console.log(req.cookies.token);
+    // console.log(req.cookies.token);
     const data = jwt.verify(req.cookies.token, "shazam");
     req.user = data;
     next();
