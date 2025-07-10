@@ -7,7 +7,6 @@ const userModel = require("./models/user");
 const postModel = require("./models/post");
 
 
-
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ entended: true }));
@@ -52,7 +51,6 @@ app.get("/login", async (req, res) => {
 });
 
 
-
 // login page - input
 app.post("/login", async (req, res) => {
   let { email, password } = req.body;
@@ -91,13 +89,11 @@ app.post("/post", Isloggedin, async (req, res) => {
 });
 
 
-
 // after login user sent here
 app.get("/profile", Isloggedin, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email }).populate("posts");
   res.render("profile", { user });
 });
-
 
 
 // middleware for protected routes
