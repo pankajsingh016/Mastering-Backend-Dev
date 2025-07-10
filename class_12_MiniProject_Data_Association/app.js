@@ -88,6 +88,34 @@ app.post("/post", Isloggedin, async (req, res) => {
   res.redirect('/profile');
 });
 
+//like a post
+app.get("/like/:id",Isloggedin,async(req,res)=>{
+
+  let post = await postModel.findOne({_id:req.params.id}).populate("user");
+
+  if(post.likes.indexOf(req.user.userid)===-1){
+    post.likes.push(req.user.userid);
+  } else{
+    post.likes.splice(post.likes.indexOf(req.user.userid),1);
+  }
+
+  await post.save();
+  res.redirect("/profile");
+})
+
+//edit a post
+app.get("/edit/:id",Isloggedin,async(req,res)=>{
+
+  let post = await postModel.findOne({_id:req.params.id}).populate("user");
+  res.render('edit',{post});
+})
+// edit a post push the edited text to the db
+app.post("/edit/:id",Isloggedin,async(req,res)=>{
+  let {content} = req.body;
+  let post = await postModel.findOneAndUpdate({_id:req.params.id},{$set:{content:content}});
+  res.redirect("/profile");
+})
+
 
 // after login user sent here
 app.get("/profile", Isloggedin, async (req, res) => {
@@ -107,5 +135,7 @@ function Isloggedin(req, res, next) {
     next();
   }
 }
-
-app.listen(3000);
+const PORT=3000
+app.listen(PORT,()=>{
+  console.log(`Backend is up an running at ${PORT}`)
+});
