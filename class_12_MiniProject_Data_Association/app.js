@@ -5,12 +5,35 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const userModel = require("./models/user");
 const postModel = require("./models/post");
+const crypto = require('crypto');
+const path = require("path");
+const multer = require('multer');
 
 
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ entended: true }));
 app.use(cookieParser());
+
+
+
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images/upload')
+  },
+  filename: function (req, file, cb) {
+    crypto.randomBytes(12, function(err,bytes){
+      const fn = bytes.toString("hex")+path.extname(file.originalname);
+      cb(null, fn);
+    })
+  }
+})
+
+const upload = multer({ storage: storage })
+
 
 
 // entry page
@@ -135,6 +158,18 @@ function Isloggedin(req, res, next) {
     next();
   }
 }
+
+
+
+app.get('/upload',(req,res)=>{
+  res.render('test');
+});
+
+app.post('/upload',upload.single("image"),(req,res)=>{
+  console.log(req.file);
+  res.redirect('/upload');
+});
+
 const PORT=3000
 app.listen(PORT,()=>{
   console.log(`Backend is up an running at ${PORT}`)
