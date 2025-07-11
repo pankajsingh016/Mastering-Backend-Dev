@@ -5,35 +5,14 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const userModel = require("./models/user");
 const postModel = require("./models/post");
-const crypto = require('crypto');
-const path = require("path");
-const multer = require('multer');
-
+const upload = require("./config/multerconfig");
+const path = require('path');
 
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ entended: true }));
+app.use(express.static(path.join(__dirname,"public")));
 app.use(cookieParser());
-
-
-
-
-
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/images/upload')
-  },
-  filename: function (req, file, cb) {
-    crypto.randomBytes(12, function(err,bytes){
-      const fn = bytes.toString("hex")+path.extname(file.originalname);
-      cb(null, fn);
-    })
-  }
-})
-
-const upload = multer({ storage: storage })
-
 
 
 // entry page
@@ -147,6 +126,21 @@ app.get("/profile", Isloggedin, async (req, res) => {
 });
 
 
+// profile upload
+app.get("/profile/upload",(req,res)=>{
+  res.render('profileupload')
+});
+
+
+app.post("/upload",Isloggedin,upload.single("image"), async (req,res)=>{
+
+  let user = await userModel.findOne({email:req.user.email});
+  user.profilepic = req.file.filename;
+  await user.save();
+  res.redirect("/profile");
+})
+
+
 // middleware for protected routes
 function Isloggedin(req, res, next) {
   if (req.cookies.token === "") {
@@ -158,17 +152,6 @@ function Isloggedin(req, res, next) {
     next();
   }
 }
-
-
-
-app.get('/upload',(req,res)=>{
-  res.render('test');
-});
-
-app.post('/upload',upload.single("image"),(req,res)=>{
-  console.log(req.file);
-  res.redirect('/upload');
-});
 
 const PORT=3000
 app.listen(PORT,()=>{
